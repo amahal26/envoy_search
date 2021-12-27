@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
-#include <io.h>
 #include <regex.h>
+#include <limits.h>
+#include <errno.h>
+#include <dirent.h>
 
 # define setlocale(Category, Locale) //from "nls.h"
 # define bindtextdomain(Domain, Directory) //from "nls.h"
 # define textdomain(Domain) //from "nls.h"
-#define EPIPE 32 //from "errno.h"
 #define PROCPATHLEN 64  // must hold /proc/2000222000/task/2000222000/cmdline
 #define EXIT_FATAL 3
 #define PIDS_VAL( relative_enum, type, stack, info ) \
@@ -304,30 +305,6 @@ struct dirent //from "dirent.h"
 	char		d_name[260]; /* [FILENAME_MAX] */ /* File name. */
 };
 
-typedef struct //from "dirent.h"
-{
-	/* disk transfer area for this dir */
-	struct _finddata_t	dd_dta;
-
-	/* dirent struct to return from dir (NOTE: this makes this thread
-	 * safe as long as only one thread uses a particular DIR struct at
-	 * a time) */
-	struct dirent		dd_dir;
-
-	/* _findnext handle */
-	intptr_t		dd_handle;
-
-	/*
-	 * Status of search:
-	 *   0 = not started yet (next entry to read is first entry)
-	 *  -1 = off the end
-	 *   positive = 0 based index of next entry
-	 */
-	int			dd_stat;
-
-	/* given path for dir with search pattern (struct is extended) */
-	char			dd_name[1];
-} DIR;
 
 typedef struct PROCTAB { //from "readproc.h"
     DIR        *procfs;
